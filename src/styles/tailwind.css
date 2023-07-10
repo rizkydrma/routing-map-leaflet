@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.location {
+  width: 14px;
+  height: 14px;
+  border-radius: 100%;
+  border: 1px solid rgb(47, 47, 47);
+  position: relative;
+  margin-top: -10px;
+}
+
+.location span {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: black;
+  left: 50%;
+  margin-left: -2px;
+  top: 18px;
+}
+
+.location span:after,
+.location span:before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: black;
+  left: 50%;
+  margin-left: -2px;
+}
+
+.location span:after {
+  top: 10px;
+}
+.location span::before {
+  top: 20px;
+}
