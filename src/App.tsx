@@ -1,13 +1,15 @@
+import axios from 'axios';
+import clsx from 'clsx';
+import { nanoid } from 'nanoid';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
+import { useDebounce } from 'usehooks-ts';
+import ListRoute from './components/ListRoute';
 import Routing from './components/Routing';
 import Sidebar from './components/Sidebar';
 import InputRoute from './components/ui/InputRoute';
-import { nanoid } from 'nanoid';
-import clsx from 'clsx';
-import axios from 'axios';
+import useComponentVisible from './hook/useComponentVisible';
 import { LocationItem } from './types/location';
-import { useDebounce } from 'usehooks-ts';
 
 export default function App() {
   const [collapse, setCollapse] = useState(false);
@@ -16,12 +18,21 @@ export default function App() {
     { id: nanoid(), latitude: 0, longitude: 0 },
     { id: nanoid(), latitude: 0, longitude: 0 },
   ]);
-  const [Loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [listLocations, setListLocations] = useState<LocationItem[]>([]);
   const [error, setError] = useState('');
   const [value, setValue] = useState('');
-  const debouncedValue = useDebounce<string>(value, 1000);
-  const inputRef = useRef(null);
+  const debouncedValue = useDebounce<string>(value, 500);
+  const [focusItem, setFocusItem] = useState<string>('');
+  const wrapperRef = useRef(null);
+  useComponentVisible(wrapperRef, () => {
+    onFocusRoute('');
+    setListLocations([]);
+  });
+
+  const onFocusRoute = (id?: string) => {
+    setFocusItem(id || '');
+  };
 
   const onAddRoute = () => {
     setGeolocation([...geolocation, { id: nanoid(), latitude: 0, longitude: 0 }]);
@@ -32,23 +43,40 @@ export default function App() {
     setGeolocation(geolocation?.filter((location) => location?.id !== id));
   };
 
-  const onSearchRoute = async (event: ChangeEvent<HTMLInputElement>, id?: string) => {
-    if (!id) return;
-
+  const onSearchRoute = async (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
-  const fetchLocations = async () => {
+  const onClickOptionsRoute = (locationRoute: LocationItem) => {
+    setListLocations([]);
+    setGeolocation(
+      geolocation?.map((location) => {
+        if (location?.id == focusItem) {
+          return {
+            ...location,
+            latitude: +locationRoute?.lat,
+            longitude: +locationRoute?.lon,
+          };
+        }
+
+        return location;
+      }),
+    );
+  };
+
+  const fetchLocations = async (query: string) => {
     try {
       setLoading(true);
-      const res = await axios.get('https://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + value);
-
+      console.log('ok');
+      if (!query) {
+        setLoading(false);
+        setListLocations([]);
+      }
+      const res = await axios.get('https://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + query);
       setLoading(false);
       setListLocations(res?.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log(error.status);
-        console.error(error.response);
         setError('Terjadi Kesalahan, Tidak dapat menemukan lokasi.');
       } else {
         console.error(error);
@@ -60,7 +88,7 @@ export default function App() {
   useEffect(() => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-        setMyLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+        setMyLocation({ id: nanoid(), latitude: position.coords.latitude, longitude: position.coords.longitude });
       });
     } else {
       console.log('Your browser not supported geolocation API');
@@ -69,7 +97,7 @@ export default function App() {
 
   useEffect(() => {
     if (value) {
-      fetchLocations();
+      fetchLocations(value);
     }
   }, [debouncedValue]);
 
@@ -88,16 +116,19 @@ export default function App() {
           geolocation={geolocation}
           addRoute={onAddRoute}
           removeRoute={(id) => onRemoveRoute(id)}
-          searchRoute={(event, id) => onSearchRoute(event, id)}
+          searchRoute={(event) => onSearchRoute(event)}
+          onFocusRoute={onFocusRoute}
+          wrapperRef={wrapperRef}
         />
 
-        <div className="p-4">
-          <ol>
-            {listLocations?.map((location) => (
-              <li key={location?.osm_id}>{location?.display_name}</li>
-            ))}
-          </ol>
-        </div>
+        <ListRoute
+          ref={wrapperRef}
+          show={value.length !== 0 && focusItem.length !== 0}
+          locations={listLocations}
+          onClickOptionsRoute={onClickOptionsRoute}
+          loading={loading}
+          error={error}
+        />
       </Sidebar>
 
       <div

@@ -37,7 +37,7 @@ const Routing: FC<RoutingProps> = ({ geolocation }) => {
     return () => {
       map.removeControl(routingControl);
     };
-  }, [map]);
+  }, [map, geolocation]);
 
   return null;
 };
