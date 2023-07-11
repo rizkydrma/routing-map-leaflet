@@ -1,1 +1,1 @@
-type Coordinates = { id?: string; latitude: number; longitude: number };
+type Coordinates = { id: string; latitude: number; longitude: number };
