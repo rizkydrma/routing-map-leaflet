@@ -1,29 +1,34 @@
-import axios from 'axios';
 import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { LayersControl, MapContainer, TileLayer } from 'react-leaflet';
 import { useDebounce } from 'usehooks-ts';
 import ListRoute from './components/ListRoute';
 import Routing from './components/Routing';
 import Sidebar from './components/Sidebar';
 import InputRoute from './components/ui/InputRoute';
 import useComponentVisible from './hook/useComponentVisible';
+import useMyLocation from './hook/useMyLocation';
 import { LocationItem } from './types/location';
+import api from './utils/api';
+import { BaseLayers } from './utils/layers';
+
+const { BaseLayer } = LayersControl;
 
 export default function App() {
   const [collapse, setCollapse] = useState(false);
-  const [myLocation, setMyLocation] = useState<Coordinates | null>(null);
+  const myLocation = useMyLocation();
   const [geolocation, setGeolocation] = useState<Coordinates[]>([
-    { id: nanoid(), latitude: 0, longitude: 0 },
-    { id: nanoid(), latitude: 0, longitude: 0 },
+    { id: nanoid(), latitude: 0, longitude: 0, value: '' },
+    { id: nanoid(), latitude: 0, longitude: 0, value: '' },
   ]);
   const [loading, setLoading] = useState(false);
   const [listLocations, setListLocations] = useState<LocationItem[]>([]);
   const [error, setError] = useState('');
   const [value, setValue] = useState('');
-  const debouncedValue = useDebounce<string>(value, 500);
   const [focusItem, setFocusItem] = useState<string>('');
+  const debouncedValue = useDebounce<string>(value, 500);
+
   const wrapperRef = useRef(null);
   useComponentVisible(wrapperRef, () => {
     onFocusRoute('');
@@ -35,7 +40,7 @@ export default function App() {
   };
 
   const onAddRoute = () => {
-    setGeolocation([...geolocation, { id: nanoid(), latitude: 0, longitude: 0 }]);
+    setGeolocation([...geolocation, { id: nanoid(), latitude: 0, longitude: 0, value: '' }]);
   };
 
   const onRemoveRoute = (id?: string) => {
@@ -43,12 +48,25 @@ export default function App() {
     setGeolocation(geolocation?.filter((location) => location?.id !== id));
   };
 
-  const onSearchRoute = async (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+  const onSearchRoute = async (event: ChangeEvent<HTMLInputElement>, id: string) => {
+    const { value } = event.target;
+    setGeolocation(
+      geolocation?.map((location) => {
+        if (location?.id == id) {
+          return {
+            ...location,
+            value: value,
+          };
+        }
+        return location;
+      }),
+    );
+    setValue(value);
   };
 
   const onClickOptionsRoute = (locationRoute: LocationItem) => {
     setListLocations([]);
+
     setGeolocation(
       geolocation?.map((location) => {
         if (location?.id == focusItem) {
@@ -56,6 +74,7 @@ export default function App() {
             ...location,
             latitude: +locationRoute?.lat,
             longitude: +locationRoute?.lon,
+            value: locationRoute?.display_name,
           };
         }
 
@@ -64,36 +83,35 @@ export default function App() {
     );
   };
 
-  const fetchLocations = async (query: string) => {
-    try {
-      setLoading(true);
-      console.log('ok');
-      if (!query) {
-        setLoading(false);
-        setListLocations([]);
-      }
-      const res = await axios.get('https://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + query);
-      setLoading(false);
-      setListLocations(res?.data);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setError('Terjadi Kesalahan, Tidak dapat menemukan lokasi.');
-      } else {
-        console.error(error);
-        setError('Something wrong.');
-      }
-    }
+  const onClickMap = async (e: L.LeafletMouseEvent) => {
+    const findGeoNotHaveValue = geolocation?.find((location) => location?.latitude == 0 && location?.longitude == 0);
+    if (!findGeoNotHaveValue) return;
+
+    const geocoder = await api.getReverseGeocoding({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+
+    findGeoNotHaveValue.latitude = e.latlng.lat;
+    findGeoNotHaveValue.longitude = e.latlng.lng;
+    findGeoNotHaveValue.value = geocoder?.display_name;
+    setGeolocation(
+      geolocation?.map((location) => {
+        if (location?.id == findGeoNotHaveValue.id) {
+          return findGeoNotHaveValue;
+        }
+        return location;
+      }),
+    );
   };
 
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setMyLocation({ id: nanoid(), latitude: position.coords.latitude, longitude: position.coords.longitude });
-      });
-    } else {
-      console.log('Your browser not supported geolocation API');
+  const fetchLocations = async (query: string) => {
+    setLoading(true);
+    try {
+      const res = await api.getLocations(query);
+      setListLocations(res);
+    } catch (error) {
+      setError('Something wrong.');
     }
-  }, []);
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (value) {
@@ -104,7 +122,7 @@ export default function App() {
   if (!myLocation) {
     return (
       <div>
-        <h1>Loading...</h1>
+        <h1>Location Permission is disable</h1>
       </div>
     );
   }
@@ -115,8 +133,8 @@ export default function App() {
         <InputRoute
           geolocation={geolocation}
           addRoute={onAddRoute}
-          removeRoute={(id) => onRemoveRoute(id)}
-          searchRoute={(event) => onSearchRoute(event)}
+          removeRoute={onRemoveRoute}
+          searchRoute={onSearchRoute}
           onFocusRoute={onFocusRoute}
           wrapperRef={wrapperRef}
         />
@@ -133,16 +151,19 @@ export default function App() {
 
       <div
         className={clsx(
-          'z-0 transition duration-600',
+          'z-0 transition duration-600 relative',
           collapse ? `translate-x-96 w-[calc(100vw-24rem)]` : 'translate-x-0 w-full',
         )}
       >
         <MapContainer center={[myLocation.latitude, myLocation.longitude]} zoom={13} style={{ height: '100vh' }}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Routing geolocation={geolocation} />
+          <LayersControl position="bottomleft">
+            {BaseLayers?.map((layer) => (
+              <BaseLayer checked={layer?.defaultChecked} name={layer?.name} key={layer?.name}>
+                <TileLayer url={layer?.url} attribution={layer?.attribute} />
+              </BaseLayer>
+            ))}
+          </LayersControl>
+          <Routing geolocation={geolocation} setGeolocation={setGeolocation} handleClickMap={onClickMap} />
         </MapContainer>
       </div>
     </main>
