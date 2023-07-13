@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { LayersControl, MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
@@ -149,12 +148,7 @@ export default function App() {
         />
       </Sidebar>
 
-      <div
-        className={clsx(
-          'z-0 transition duration-600 relative',
-          // collapse ? `translate-x-96 w-[calc(100vw-24rem)]` : 'translate-x-0 w-full',
-        )}
-      >
+      <div className="z-0 transition duration-600 relative">
         <MapContainer
           center={[myLocation.latitude, myLocation.longitude]}
           zoom={13}
