@@ -1,4 +1,4 @@
-import { XCircleIcon, PlusCircleIcon, MapPin, ChevronRight, Loader2 } from 'lucide-react';
+import { XCircleIcon, PlusCircleIcon, MapPin, ChevronRight, Loader2, CarIcon } from 'lucide-react';
 
 export const Icons = {
   XCircleIcon,
@@ -6,6 +6,7 @@ export const Icons = {
   MapPin,
   ChevronRight,
   Loader2,
+  CarIcon,
 };
 
 export default Icons;

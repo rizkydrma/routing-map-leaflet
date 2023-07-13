@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.text-ss {
+  font-size: 0.6rem;
+}
+
 .location {
   width: 14px;
   height: 14px;

@@ -3,12 +3,14 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { LayersControl, MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import { useDebounce } from 'usehooks-ts';
 import ListRoute from './components/ListRoute';
+import RouteInstructions from './components/RouteInstructions';
 import Routing from './components/Routing';
 import Sidebar from './components/Sidebar';
 import InputRoute from './components/ui/InputRoute';
 import useComponentVisible from './hook/useComponentVisible';
 import useMyLocation from './hook/useMyLocation';
 import { LocationItem } from './types/location';
+import { RouteDirections } from './types/route';
 import api from './utils/api';
 import { BaseLayers } from './utils/layers';
 
@@ -21,6 +23,7 @@ export default function App() {
     { id: nanoid(), latitude: 0, longitude: 0, value: '' },
     { id: nanoid(), latitude: 0, longitude: 0, value: '' },
   ]);
+  const [routeDirection, setRouteDirection] = useState<RouteDirections | null>(null);
   const [loading, setLoading] = useState(false);
   const [listLocations, setListLocations] = useState<LocationItem[]>([]);
   const [error, setError] = useState('');
@@ -146,6 +149,8 @@ export default function App() {
           loading={loading}
           error={error}
         />
+
+        <RouteInstructions route={routeDirection} />
       </Sidebar>
 
       <div className="z-0 transition duration-600 relative">
@@ -164,7 +169,7 @@ export default function App() {
             ))}
           </LayersControl>
 
-          <Routing geolocation={geolocation} setGeolocation={setGeolocation} handleClickMap={onClickMap} />
+          <Routing geolocation={geolocation} handleClickMap={onClickMap} setRouteDirection={setRouteDirection} />
         </MapContainer>
       </div>
     </main>

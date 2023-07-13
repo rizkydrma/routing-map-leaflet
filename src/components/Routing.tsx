@@ -4,14 +4,15 @@ import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { FC, useEffect } from 'react';
 import { useMap, useMapEvents } from 'react-leaflet';
 import { MarkerDefault, MarkerFinish, MarkerStart } from '../assets';
+import { RouteDirections } from '../types/route';
 
 interface RoutingProps {
   geolocation: Coordinates[];
-  setGeolocation: React.Dispatch<React.SetStateAction<Coordinates[]>>;
+  setRouteDirection: React.Dispatch<React.SetStateAction<RouteDirections | null>>;
   handleClickMap: (e: L.LeafletMouseEvent) => void;
 }
 
-const Routing: FC<RoutingProps> = ({ geolocation, handleClickMap }) => {
+const Routing: FC<RoutingProps> = ({ geolocation, handleClickMap, setRouteDirection }) => {
   const map = useMap();
   useMapEvents({
     async click(e) {
@@ -49,9 +50,9 @@ const Routing: FC<RoutingProps> = ({ geolocation, handleClickMap }) => {
           icon: marker_icon,
         });
 
-        marker.on('dragend', (e) => {
-          console.log('end', e);
-        });
+        // marker.on('dragend', (e) => {
+        //   console.log('end', e);
+        // });
         return marker;
       },
     });
@@ -69,8 +70,8 @@ const Routing: FC<RoutingProps> = ({ geolocation, handleClickMap }) => {
       plan: plan,
     }).addTo(map);
 
-    routingControl.on('routeselected', (e) => {
-      console.log('eee', e);
+    routingControl.on('routeselected', (event) => {
+      setRouteDirection(event?.route);
     });
 
     return () => {
