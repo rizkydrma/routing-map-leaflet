@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { LayersControl, MapContainer, TileLayer } from 'react-leaflet';
+import { LayersControl, MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import { useDebounce } from 'usehooks-ts';
 import ListRoute from './components/ListRoute';
 import Routing from './components/Routing';
@@ -128,7 +128,7 @@ export default function App() {
   }
 
   return (
-    <main className="flex">
+    <main>
       <Sidebar collapse={collapse} setCollapse={setCollapse}>
         <InputRoute
           geolocation={geolocation}
@@ -152,17 +152,24 @@ export default function App() {
       <div
         className={clsx(
           'z-0 transition duration-600 relative',
-          collapse ? `translate-x-96 w-[calc(100vw-24rem)]` : 'translate-x-0 w-full',
+          // collapse ? `translate-x-96 w-[calc(100vw-24rem)]` : 'translate-x-0 w-full',
         )}
       >
-        <MapContainer center={[myLocation.latitude, myLocation.longitude]} zoom={13} style={{ height: '100vh' }}>
-          <LayersControl position="bottomleft">
+        <MapContainer
+          center={[myLocation.latitude, myLocation.longitude]}
+          zoom={13}
+          style={{ height: '100vh' }}
+          zoomControl={false}
+        >
+          <ZoomControl position="topright" />
+          <LayersControl position="topright">
             {BaseLayers?.map((layer) => (
               <BaseLayer checked={layer?.defaultChecked} name={layer?.name} key={layer?.name}>
                 <TileLayer url={layer?.url} attribution={layer?.attribute} />
               </BaseLayer>
             ))}
           </LayersControl>
+
           <Routing geolocation={geolocation} setGeolocation={setGeolocation} handleClickMap={onClickMap} />
         </MapContainer>
       </div>
