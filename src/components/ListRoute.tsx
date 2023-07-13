@@ -11,7 +11,7 @@ interface ListRouteProps {
 }
 
 const ListRoute = forwardRef<HTMLDivElement, ListRouteProps>(
-  ({ locations, onClickOptionsRoute, show, loading, error }, ref) => {
+  ({ locations, onClickOptionsRoute, show, loading }, ref) => {
     return show ? (
       <div ref={ref}>
         {loading && (
