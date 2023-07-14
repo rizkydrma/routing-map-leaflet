@@ -13,11 +13,14 @@ import { LocationItem } from './types/location';
 import { RouteDirections } from './types/route';
 import api from './utils/api';
 import { BaseLayers } from './utils/layers';
+import Instructions from './components/Instructions';
+import Icons from './components/Icons';
 
 const { BaseLayer } = LayersControl;
 
 export default function App() {
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useState<boolean>(false);
+  const [detail, setDetail] = useState<boolean>(false);
   const myLocation = useMyLocation();
   const [geolocation, setGeolocation] = useState<Coordinates[]>([
     { id: nanoid(), latitude: 0, longitude: 0, value: '' },
@@ -123,8 +126,14 @@ export default function App() {
 
   if (!myLocation) {
     return (
-      <div>
-        <h1>Location Permission is disable</h1>
+      <div className="h-full min-h-[100vh] grid place-items-center bg-gray-50">
+        <div className="flex justify-center items-center flex-col">
+          <Icons.LocateOffIcon size={80} className="mb-4 animate-pulse" />
+          <h1>Location Permission is disable</h1>
+          <p className="text-xs text-gray-600 w-72 text-center">
+            Please turn on location permission on your device and reload again.
+          </p>
+        </div>
       </div>
     );
   }
@@ -150,7 +159,8 @@ export default function App() {
           error={error}
         />
 
-        <RouteInstructions route={routeDirection} />
+        <RouteInstructions route={routeDirection} setDetailRoute={setDetail} />
+        <Instructions collapse={detail} geolocation={geolocation} route={routeDirection} setDetailRoute={setDetail} />
       </Sidebar>
 
       <div className="z-0 transition duration-600 relative">
@@ -161,7 +171,7 @@ export default function App() {
           zoomControl={false}
         >
           <ZoomControl position="topright" />
-          <LayersControl position="topright">
+          <LayersControl position="bottomright">
             {BaseLayers?.map((layer) => (
               <BaseLayer checked={layer?.defaultChecked} name={layer?.name} key={layer?.name}>
                 <TileLayer url={layer?.url} attribution={layer?.attribute} />

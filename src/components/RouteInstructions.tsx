@@ -1,13 +1,14 @@
 import { FC } from 'react';
 import { RouteDirections } from '../types/route';
-import { convertTime } from '../utils/utility';
+import { convertDistance, convertTime } from '../utils/utility';
 import Icons from './Icons';
 
 interface RouteInstructionsProps {
   route: RouteDirections | null;
+  setDetailRoute: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const RouteInstructions: FC<RouteInstructionsProps> = ({ route }) => {
+const RouteInstructions: FC<RouteInstructionsProps> = ({ route, setDetailRoute }) => {
   if (!route) return;
 
   return (
@@ -21,14 +22,18 @@ const RouteInstructions: FC<RouteInstructionsProps> = ({ route }) => {
           <h5 className="text-xs font-medium truncate">{route?.name}</h5>
           <p className="mt-2 text-xs text-gray-600">Rute tercepat untuk saat ini sesuai kondisi lalu lintas.</p>
 
-          <button type="button" className="text-xs font-medium text-blue-700">
+          <button
+            type="button"
+            className="text-xs font-medium text-blue-700 hover:bg-blue-100 transition duration-300 py-2 px-4 rounded -translate-x-4"
+            onClick={() => setDetailRoute(true)}
+          >
             Detail
           </button>
         </div>
         <div className="w-fit">
           <h5 className="text-ss font-medium text-orange-700">{convertTime(route?.summary?.totalTime)}</h5>
           <p className="text-ss font-medium text-gray-600 mt-3">
-            {Number(route?.summary?.totalDistance / 1000).toFixed(0)}km
+            {convertDistance({ distance: route?.summary?.totalDistance, type: 'km' })}
           </p>
         </div>
       </div>

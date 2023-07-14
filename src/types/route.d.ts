@@ -26,7 +26,7 @@ export interface Options {
 }
 
 export interface Instruction {
-  type: string;
+  type: GuideType;
   distance: number;
   time: number;
   road: string;
@@ -45,3 +45,14 @@ export interface Summary {
   totalDistance: number;
   totalTime: number;
 }
+
+export type GuideType =
+  | 'Head'
+  | 'Right'
+  | 'EndofRoad'
+  | 'Offmap'
+  | 'Left'
+  | 'Continue'
+  | 'DestinationReached'
+  | 'Fork'
+  | 'Straight';

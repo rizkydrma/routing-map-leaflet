@@ -12,9 +12,10 @@ const Sidebar: FC<SidebarProps> = ({ collapse, setCollapse, children }) => {
   return (
     <>
       <div
-        className={`fixed top-0 bottom-0 bg-white z-20 transition duration-600 ${
-          collapse ? 'translate-x-0' : '-translate-x-80 lg:-translate-x-96'
-        }`}
+        className={clsx(
+          'fixed top-0 bottom-0 bg-white z-20 transition',
+          collapse ? 'translate-x-0' : '-translate-x-80 lg:-translate-x-96',
+        )}
       >
         <div className={`z-20 h-full max-h-[100vh] w-80 lg:w-96 overflow-y-scroll`}>{children}</div>
       </div>
