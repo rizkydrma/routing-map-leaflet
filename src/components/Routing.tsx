@@ -31,8 +31,9 @@ const Routing: FC<RoutingProps> = ({ geolocation, handleClickMap, setRouteDirect
     const plan = L.Routing.plan(wayPoints, {
       createMarker: (wayPointsIndex: number, wayPoints: L.Routing.Waypoint, numberOfWayPoints: number) => {
         let marker_icon = L.icon({
-          iconUrl: MarkerDefault,
-          iconSize: [40, 40],
+          iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+          iconAnchor: [20, 30],
+          iconSize: [20, 30],
         });
         if (wayPointsIndex == 0) {
           marker_icon = L.icon({
