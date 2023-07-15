@@ -16,6 +16,7 @@ import {
   IterationCwIcon,
   SplitIcon,
   HomeIcon,
+  ArrowDownUpIcon,
 } from 'lucide-react';
 
 export const Icons = {
@@ -36,6 +37,7 @@ export const Icons = {
   IterationCwIcon,
   SplitIcon,
   HomeIcon,
+  ArrowDownUpIcon,
 };
 
 export default Icons;

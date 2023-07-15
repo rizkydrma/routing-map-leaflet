@@ -44,6 +44,10 @@ export default function App() {
     setFocusItem(id || '');
   };
 
+  const onSwapLocation = () => {
+    setGeolocation([geolocation[1], geolocation[0]]);
+  };
+
   const onAddRoute = () => {
     setGeolocation([...geolocation, { id: nanoid(), latitude: 0, longitude: 0, value: '' }]);
   };
@@ -147,6 +151,7 @@ export default function App() {
           removeRoute={onRemoveRoute}
           searchRoute={onSearchRoute}
           onFocusRoute={onFocusRoute}
+          swapLocation={onSwapLocation}
           wrapperRef={wrapperRef}
         />
 

@@ -7,7 +7,8 @@ interface InputRouteProps {
   removeRoute: (id?: string) => void;
   searchRoute: (event: ChangeEvent<HTMLInputElement>, id: string) => void;
   onFocusRoute: (id?: string) => void;
-  wrapperRef: any;
+  swapLocation: () => void;
+  wrapperRef: React.LegacyRef<HTMLDivElement>;
 }
 
 const InputRoute: FC<InputRouteProps> = ({
@@ -16,6 +17,7 @@ const InputRoute: FC<InputRouteProps> = ({
   removeRoute,
   searchRoute,
   onFocusRoute,
+  swapLocation,
   wrapperRef,
 }) => {
   return (
@@ -40,9 +42,13 @@ const InputRoute: FC<InputRouteProps> = ({
                 />
               </div>
               <div className="w-fit min-w-[16px]">
-                {geolocation?.length > 2 && (
+                {geolocation?.length > 2 ? (
                   <button type="button" onClick={() => removeRoute(input?.id!)}>
                     <Icons.XCircleIcon size={16} className="-mt-[10px]" />
+                  </button>
+                ) : (
+                  <button type="button" onClick={swapLocation}>
+                    <Icons.ArrowDownUpIcon size={16} className="translate-y-4" />
                   </button>
                 )}
               </div>
@@ -76,11 +82,11 @@ const InputRoute: FC<InputRouteProps> = ({
         );
       })}
 
-      <div className="w-full">
-        <button onClick={addRoute} className="text-xs inline-flex gap-2">
+      <div className="w-full flex gap-2 items-center">
+        <button onClick={addRoute}>
           <Icons.PlusCircleIcon size={15} />
-          Tambahkan Tujuan
         </button>
+        <span className="text-xs">Tambahkan Tujuan</span>
       </div>
     </div>
   );

@@ -618,6 +618,18 @@ video {
   margin-top: -0.75rem;
 }
 
+.-mt-\[26px\] {
+  margin-top: -26px;
+}
+
+.-mt-\[6px\] {
+  margin-top: -6px;
+}
+
+.-mt-\[0px\] {
+  margin-top: -0px;
+}
+
 .flex {
   display: flex;
 }
@@ -733,6 +745,16 @@ video {
 
 .translate-y-\[calc\(50vh\)\] {
   --tw-translate-y: calc(50vh);
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-y-10 {
+  --tw-translate-y: 2.5rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-y-4 {
+  --tw-translate-y: 1rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
