@@ -711,6 +711,14 @@ video {
   min-width: 16px;
 }
 
+.min-w-\[20px\] {
+  min-width: 20px;
+}
+
+.min-w-\[24px\] {
+  min-width: 24px;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -1074,6 +1082,16 @@ video {
 
 .last\:border-b:last-child {
   border-bottom-width: 1px;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: .5;
+  }
+}
+
+.hover\:animate-pulse:hover {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .hover\:bg-blue-100:hover {

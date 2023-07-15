@@ -1,5 +1,6 @@
 import { ChangeEvent, FC } from 'react';
 import Icons from '../Icons';
+import Button from './Button';
 
 interface InputRouteProps {
   geolocation: Coordinates[];
@@ -43,13 +44,13 @@ const InputRoute: FC<InputRouteProps> = ({
               </div>
               <div className="w-fit min-w-[16px]">
                 {geolocation?.length > 2 ? (
-                  <button type="button" onClick={() => removeRoute(input?.id!)}>
+                  <Button type="button" onClick={() => removeRoute(input?.id!)}>
                     <Icons.XCircleIcon size={16} className="-mt-[10px]" />
-                  </button>
+                  </Button>
                 ) : (
-                  <button type="button" onClick={swapLocation}>
-                    <Icons.ArrowDownUpIcon size={16} className="translate-y-4" />
-                  </button>
+                  <Button type="button" onClick={swapLocation} className="translate-y-4">
+                    <Icons.ArrowDownUpIcon size={16} />
+                  </Button>
                 )}
               </div>
             </div>
@@ -65,17 +66,17 @@ const InputRoute: FC<InputRouteProps> = ({
               <input
                 type="text"
                 className="mb-3 border border-gray-500 outline-none w-full rounded bg-white focus:border-blue-600 px-4 text-xs py-2 [&:not(:last-child)]:bg-red-600"
-                placeholder="Pilih titik"
+                placeholder="Pilih Tujuan"
                 onChange={(e) => searchRoute(e, input?.id)}
                 onFocus={() => onFocusRoute(input?.id)}
                 value={input?.value}
               />
             </div>
-            <div className="w-fit min-w-[16px]">
+            <div className="w-fit min-w-[24px]">
               {geolocation?.length > 2 && (
-                <button type="button" onClick={() => removeRoute(input?.id!)}>
+                <Button type="button" onClick={() => removeRoute(input?.id!)}>
                   <Icons.XCircleIcon size={16} className="-mt-[10px]" />
-                </button>
+                </Button>
               )}
             </div>
           </div>
@@ -83,10 +84,12 @@ const InputRoute: FC<InputRouteProps> = ({
       })}
 
       <div className="w-full flex gap-2 items-center">
-        <button onClick={addRoute}>
+        <Button type="button" onClick={addRoute}>
           <Icons.PlusCircleIcon size={15} />
+        </Button>
+        <button type="button" onClick={addRoute}>
+          <span className="text-xs">Tambahkan Tujuan</span>
         </button>
-        <span className="text-xs">Tambahkan Tujuan</span>
       </div>
     </div>
   );
