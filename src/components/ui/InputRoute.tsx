@@ -52,7 +52,7 @@ const InputRoute: FC<InputRouteProps> = ({
 
         return (
           <div className="flex gap-2 items-center w-full" key={input?.id}>
-            <div className="w-fit">
+            <div className="w-fit -mt-3">
               <Icons.MapPin size={15} color="red" />
             </div>
             <div className="flex-1">

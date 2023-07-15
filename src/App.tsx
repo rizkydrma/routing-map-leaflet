@@ -171,7 +171,7 @@ export default function App() {
           zoomControl={false}
         >
           <ZoomControl position="topright" />
-          <LayersControl position="bottomright">
+          <LayersControl position="topright">
             {BaseLayers?.map((layer) => (
               <BaseLayer checked={layer?.defaultChecked} name={layer?.name} key={layer?.name}>
                 <TileLayer url={layer?.url} attribution={layer?.attribute} />
