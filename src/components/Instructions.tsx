@@ -21,8 +21,8 @@ const Instructions: FC<InstructionsProps> = ({ collapse, route, geolocation, set
   return (
     <div
       className={clsx(
-        'fixed top-0 bottom-0 bg-white z-40 transition duration-500 w-80 lg:w-96 h-full max-h-[100vh] overflow-y-scroll',
-        collapse ? 'translate-x-0' : '-translate-x-80 lg:-translate-x-96',
+        'fixed top-0 bottom-0 bg-white z-40 transition duration-500 w-80 lg:w-[28rem] h-full max-h-[100vh] overflow-y-scroll',
+        collapse ? 'translate-x-0' : '-translate-x-80 lg:-translate-x-[28rem]',
       )}
     >
       <div className="grid grid-cols-12 p-4 border-b">
