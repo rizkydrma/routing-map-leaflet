@@ -17,6 +17,9 @@ import {
   SplitIcon,
   HomeIcon,
   ArrowDownUpIcon,
+  MoveUpLeft,
+  MoveUpRight,
+  Undo2Icon,
 } from 'lucide-react';
 
 export const Icons = {
@@ -38,6 +41,9 @@ export const Icons = {
   SplitIcon,
   HomeIcon,
   ArrowDownUpIcon,
+  MoveUpLeft,
+  MoveUpRight,
+  Undo2Icon,
 };
 
 export default Icons;

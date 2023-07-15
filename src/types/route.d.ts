@@ -26,14 +26,14 @@ export interface Options {
 }
 
 export interface Instruction {
-  type: GuideType;
+  type: string;
   distance: number;
   time: number;
   road: string;
   direction: string;
   index: number;
   mode: string;
-  modifier: string;
+  modifier: ModifierType;
   text: string;
 }
 
@@ -46,7 +46,7 @@ export interface Summary {
   totalTime: number;
 }
 
-export type GuideType =
+export type ModifierType =
   | 'Head'
   | 'Right'
   | 'EndofRoad'
@@ -55,4 +55,9 @@ export type GuideType =
   | 'Continue'
   | 'DestinationReached'
   | 'Fork'
-  | 'Straight';
+  | 'Straight'
+  | 'SlightLeft'
+  | 'SlightRight'
+  | 'SharpLeft'
+  | 'SharpRight'
+  | 'Uturn';

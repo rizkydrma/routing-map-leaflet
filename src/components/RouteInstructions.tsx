@@ -14,7 +14,7 @@ const RouteInstructions: FC<RouteInstructionsProps> = ({ route, setDetailRoute }
   return (
     <div className="py-4">
       <h1 className="text-sm font-medium pl-4">Rute</h1>
-      <div className="border-l-4 border-l-blue-600 py-4 pl-4 flex gap-2 items-start">
+      <div className="border-l-4 border-l-blue-600 pt-4 pl-4 flex gap-2 items-start">
         <div className="w-fit">
           <Icons.CarIcon size={18} fontWeight={900} />
         </div>

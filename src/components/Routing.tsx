@@ -3,7 +3,7 @@ import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { FC, useEffect } from 'react';
 import { useMap, useMapEvents } from 'react-leaflet';
-import { MarkerDefault, MarkerFinish, MarkerStart } from '../assets';
+import { MarkerFinish, MarkerStart } from '../assets';
 import { RouteDirections } from '../types/route';
 
 interface RoutingProps {
@@ -67,7 +67,7 @@ const Routing: FC<RoutingProps> = ({ geolocation, handleClickMap, setRouteDirect
         styles: [{ color: '#2563eb', weight: 6, opacity: 0.8 }],
       },
       waypoints: wayPoints,
-      show: false,
+      show: true,
       plan: plan,
     }).addTo(map);
 
