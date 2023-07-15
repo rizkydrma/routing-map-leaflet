@@ -67,7 +67,7 @@ const Routing: FC<RoutingProps> = ({ geolocation, handleClickMap, setRouteDirect
         styles: [{ color: '#2563eb', weight: 6, opacity: 0.8 }],
       },
       waypoints: wayPoints,
-      show: true,
+      show: false,
       plan: plan,
     }).addTo(map);
 

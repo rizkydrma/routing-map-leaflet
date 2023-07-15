@@ -44,8 +44,8 @@ const InputRoute: FC<InputRouteProps> = ({
               </div>
               <div className="w-fit min-w-[16px]">
                 {geolocation?.length > 2 ? (
-                  <Button type="button" onClick={() => removeRoute(input?.id!)}>
-                    <Icons.XCircleIcon size={16} className="-mt-[10px]" />
+                  <Button type="button" onClick={() => removeRoute(input?.id!)} className="-mt-[10px]">
+                    <Icons.XCircleIcon size={16} />
                   </Button>
                 ) : (
                   <Button type="button" onClick={swapLocation} className="translate-y-4">
@@ -74,8 +74,8 @@ const InputRoute: FC<InputRouteProps> = ({
             </div>
             <div className="w-fit min-w-[24px]">
               {geolocation?.length > 2 && (
-                <Button type="button" onClick={() => removeRoute(input?.id!)}>
-                  <Icons.XCircleIcon size={16} className="-mt-[10px]" />
+                <Button type="button" onClick={() => removeRoute(input?.id!)} className="-mt-[10px]">
+                  <Icons.XCircleIcon size={16} />
                 </Button>
               )}
             </div>

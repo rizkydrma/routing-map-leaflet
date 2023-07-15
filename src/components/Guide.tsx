@@ -8,7 +8,6 @@ interface GuideProps {
 }
 
 const Guide: FC<GuideProps> = ({ instructions }) => {
-  console.log(instructions);
   return instructions?.map((instruction) => (
     <div className="grid grid-cols-12 p-2 items-start" key={instruction?.index}>
       <div className="col-span-1">
