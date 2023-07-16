@@ -47,8 +47,13 @@ const Routing: FC<RoutingProps> = ({ geolocation, handleClickMap, setRouteDirect
           });
         }
         var marker = L.marker(wayPoints.latLng, {
-          draggable: true,
+          draggable: false,
           icon: marker_icon,
+        });
+
+        marker.on('click', (e) => {
+          var container = (L.DomUtil.create('div').innerHTML = geolocation[wayPointsIndex].value);
+          L.popup().setContent(container).setLatLng(e.latlng).openOn(map);
         });
 
         // marker.on('dragend', (e) => {
